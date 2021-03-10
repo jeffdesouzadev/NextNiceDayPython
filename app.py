@@ -83,6 +83,7 @@ def delete(id):
 def open_weather_request(min_temp: int, max_temp: int, zipcode):
     print("index loaded")
     # OPENWEATHER_AUTH = ''  # REMOVE BEFORE COMMITTING!!
+
     OPENWEATHER_AUTH = S3Connection(os.environ['OPENWEATHER_AUTH'])
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
         zipcode+"&appid="+OPENWEATHER_AUTH
