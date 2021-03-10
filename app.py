@@ -53,6 +53,7 @@ def index():
                                 email=schedule_email)
             out = open_weather_request(
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
+            text_response = send_text(out, schedule_phone_number)
             print(out)
             try:
                 db.session.add(new_schedule)
@@ -137,7 +138,7 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     out = ""
     for k in range(len(days)):
         if k > 0:
-            out += "] "
+            out += "]%0a"
         day = days[k]
         out += day + "["
         if len(weather_times[day]) > 0:
@@ -148,13 +149,24 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
         if k == len(days)-1:
             out += "]"
     return out
-    # print(out)
 
-    # print(data)
 
-    # print(response.text)
+def send_text(message: str, destination_number: str):
+    TWILIO_AUTH = os.environ.get('TWILIO_AUTH')
+    TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
+    TWILIO_SID = os.environ.get('TWILIO_SID')
+    url = "https://api.twilio.com/2010-04-01/Accounts/"+TWILIO_SID+"/Messages.json"
 
-    # return render_template('index.html')
+    payload = 'To=%2B1' + destination_number + '&Body=' + message + \
+        '&MediaUrl=https%3A%2F%2Fmedia.giphy.com%2Fmedia%2FPnUatAYWMEMvmiwsyx%2Fgiphy.gif&From=9165072052'
+    headers = {
+        'Authorization': 'Basic '+TWILIO_AUTH,
+        'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    response = requests.request("POST", url, headers=headers, data=payload)
+
+    return response.text
 
 
 if __name__ == "__main__":
