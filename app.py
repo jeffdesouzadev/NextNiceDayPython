@@ -6,6 +6,7 @@ import requests
 import json
 import time
 
+import os
 from boto.s3.connection import S3Connection
 
 app = Flask(__name__)
@@ -84,8 +85,11 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     print("index loaded")
     # OPENWEATHER_AUTH = ''  # REMOVE BEFORE COMMITTING!!
 
-    OPENWEATHER_AUTH = S3Connection(
-        os.environ['S3_KEY'], os.environ['OPENWEATHER_AUTH'])
+    # OPENWEATHER_AUTH = S3Connection(
+    #    os.environ['S3_KEY'], os.environ['OPENWEATHER_AUTH'])
+
+    OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
+
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
         zipcode+"&appid="+OPENWEATHER_AUTH
 
