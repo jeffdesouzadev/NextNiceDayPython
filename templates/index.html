@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<center>
+<div class='insertSchedule'>
+    <form action='/' method=post>
+    <table>
+        <TR><TD>Min Temp</TD><TD><input type=text name=min_temp size=4></TD></TR>
+        <TR><TD>Max Temp</TD><TD><input type=text name=max_temp size=4></TD></TR>
+        <TR><TD>Zipcode</TD><TD><input type=text name=zipcode size=6></TD></TR>
+        <TR><TD>Phone Number</TD><TD><input type=text name=phone_number size=12></TD></TR>
+        <TR><TD>Email (optional)</TD><TD><input type=text name=email size=20></TD></TR>
+        <TR><TD>Password<BR>(Jeff's middle name)</TD><TD><input type=password name=password size=20></TD></TR>
+        <TR><TD colspan=2><input type=submit name=submit value=submit></TD></TR>
+    </table> 
+    </form>   
+</div>
+
+<div>
+    {{out}}
+</div>
+
+{% if schedules|length > 0 %}
+<div class=schedules>
+    <table>
+        <TR>
+            <TH>SID</TH>
+            <TH>MIN TEMP</TH>
+            <TH>MAX TEMP</TH>
+            <TH>ZIPCODE</TH>
+            <TH>PHONE NUMBER</TH>
+            <TH>EMAIL</TH>
+            <TH>CREATED</TH>
+        </TR>
+        {% for schedule in schedules %}
+        <TR>
+            <TD>{{schedule.id}}</TD>
+            <TD>{{schedule.min_temp}}</TD>
+            <TD>{{schedule.max_temp}}</TD>
+            <TD>{{schedule.zipcode}}</TD>
+            <TD>{{schedule.phone_number}}</TD>
+            <TD>{{schedule.email}}</TD>
+            <TD>
+                <a href="/delete/{{schedule.id}}">Delete</a>
+            </TD>
+        </TR>
+        {% endfor %}
+        <TR><TD colspan=7>Todo: figure out if Heroku offers cron/script-scheduling functionality</TD></TR>
+    </table>
+</div>
+
+{% endif %}
+
+
+
+</center>
+{% endblock %}
