@@ -5,8 +5,7 @@
 {% endblock %}
 
 {% block body %}
-<center>
-<div class='insertSchedule'>
+<div class='instantTextForm'>
     <form action='/' method=post>
     <table>
         <TR><TD>Min Temp</TD><TD><input type=text name=min_temp size=4></TD></TR>
@@ -18,10 +17,6 @@
         <TR><TD colspan=2><input type=submit name=submit value=submit></TD></TR>
     </table> 
     </form>   
-</div>
-
-<div>
-    {{out}}
 </div>
 
 {% if schedules|length > 0 %}

@@ -54,15 +54,15 @@ def index():
             out = open_weather_request(
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
             text_response = send_text(out, schedule_phone_number)
-            out = text_response
+
             print(out)
             try:
                 db.session.add(new_schedule)
                 db.session.commit()
 
                 # print(out)
-                # return redirect('/')
-                return render_template('index.html', out=out)
+                return redirect('/')
+                # return render_template('index.html', out=out)
             except:
                 return "There was an issue adding your schedule."
         else:
