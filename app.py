@@ -37,7 +37,7 @@ def index():
             out = open_weather_request(
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
             text_response = send_text(out, schedule_phone_number)
-
+            return redirect('/')
         else:
             return "Wrong password."
     else:
