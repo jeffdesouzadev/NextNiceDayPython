@@ -21,15 +21,15 @@ def index():
     if request.method == 'POST':
         password = request.form['password']
         if str(password).upper() == "FRANCISCO":
-            schedule_min_temp = request.form['min_temp']
-            schedule_max_temp = request.form['max_temp']
-            schedule_zipcode = request.form['zipcode']
-            schedule_phone_number = request.form['phone_number']
-            schedule_password = request.form['password']
+            min_temp = request.form['min_temp']
+            max_temp = request.form['max_temp']
+            zipcode = request.form['zipcode']
+            phone_number = request.form['phone_number']
+            password = request.form['password']
 
             out = open_weather_request(
-                schedule_min_temp, schedule_max_temp, schedule_zipcode)
-            text_response = send_text(out, schedule_phone_number)
+                min_temp, max_temp, zipcode)
+            text_response = send_text(out, phone_number)
             return render_template('submitted.html')
             # return redirect('/')
         else:
