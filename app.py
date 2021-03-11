@@ -10,12 +10,6 @@ import os
 from boto.s3.connection import S3Connection
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schedules.db'
-#db = SQLAlchemy(app)
-
-
-#    def __repr__(self):
-#        return '<Schedule %r>' % self.id
 
 
 def KToF(kelvin):
@@ -31,17 +25,16 @@ def index():
             schedule_max_temp = request.form['max_temp']
             schedule_zipcode = request.form['zipcode']
             schedule_phone_number = request.form['phone_number']
-            schedule_email = request.form['email']
             schedule_password = request.form['password']
 
             out = open_weather_request(
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
             text_response = send_text(out, schedule_phone_number)
-            return redirect('/')
+            return render_template('submitted.html')
+            # return redirect('/')
         else:
             return "Wrong password."
     else:
-        #schedules = Todo.query.order_by(Todo.date_created).all()
         return render_template('index.html')
 
 
@@ -87,18 +80,21 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
             weather_times[the_date].append(the_time)
 
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
-    for k in range(len(days)):
-        if k > 0:
-            out += "]%0a"
-        day = days[k]
-        out += day + "%0a["
-        if len(weather_times[day]) > 0:
-            for i in range(len(weather_times[day])):
-                out += weather_times[day][i]
-                if i < len(weather_times[day])-1:
-                    out += ","
-        if k == len(days)-1:
-            out += "]"
+    if len(days) < 1:
+        out += "(none found!)"
+    else:
+        for k in range(len(days)):
+            if k > 0:
+                out += "]%0a"
+            day = days[k]
+            out += day + "%0a["
+            if len(weather_times[day]) > 0:
+                for i in range(len(weather_times[day])):
+                    out += weather_times[day][i]
+                    if i < len(weather_times[day])-1:
+                        out += ","
+            if k == len(days)-1:
+                out += "]"
     return out
 
 
