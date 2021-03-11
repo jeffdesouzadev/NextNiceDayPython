@@ -9,6 +9,7 @@ body {
   margin-right: auto;
 }
 
+table,
 td {
   text-align: left;
 }
