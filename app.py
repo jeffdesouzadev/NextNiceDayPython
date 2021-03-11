@@ -31,9 +31,7 @@ def index():
                 min_temp, max_temp, zipcode)
             text_response = send_text(out, phone_number)
 
-            submitted_values = [min_temp, max_temp, zipcode, phone_number]
-            return render_template('submitted.html', min_temp=min_temp)
-            # return redirect('/')
+            return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
         else:
             return "Wrong password."
     else:
