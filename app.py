@@ -32,7 +32,7 @@ def index():
             text_response = send_text(out, phone_number)
 
             submitted_values = [min_temp, max_temp, zipcode, phone_number]
-            return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp)
+            return render_template('submitted.html')
             # return redirect('/')
         else:
             return "Wrong password."
@@ -83,7 +83,7 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
 
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
     if len(days) < 1:
-        out += "(none found!)"
+        out += "none found!"
     else:
         for k in range(len(days)):
             if k > 0:
