@@ -32,7 +32,7 @@ def index():
             text_response = send_text(out, phone_number)
 
             submitted_values = [min_temp, max_temp, zipcode, phone_number]
-            return render_template('submitted.html', submitted_values=submitted_values)
+            return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp)
             # return redirect('/')
         else:
             return "Wrong password."
