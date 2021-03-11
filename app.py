@@ -74,7 +74,7 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
         epoch_time = data["list"][three_hour_inc]['dt']
         epoch_time = datetime.fromtimestamp(epoch_time)
         the_date = epoch_time.strftime("%a %m/%d")
-        the_time = epoch_time.strftime("%-I:%M%p")
+        the_time = epoch_time.strftime("%-I%p")
 
         temp = data["list"][three_hour_inc]["main"]["temp"]
         temp = round(KToF(temp), 2)
