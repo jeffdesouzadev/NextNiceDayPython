@@ -30,7 +30,9 @@ def index():
             out = open_weather_request(
                 min_temp, max_temp, zipcode)
             text_response = send_text(out, phone_number)
-            return render_template('submitted.html')
+
+            submitted_values = [min_temp, max_temp, zipcode, phone_number]
+            return render_template('submitted.html', submitted_values=submitted_values)
             # return redirect('/')
         else:
             return "Wrong password."
