@@ -1,10 +1,11 @@
 from flask import Flask, render_template, url_for, request, redirect
-#from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 import requests
+import re
 import json
 import time
+
 
 import os
 from boto.s3.connection import S3Connection
@@ -25,6 +26,7 @@ def index():
             max_temp = request.form['max_temp']
             zipcode = request.form['zipcode']
             phone_number = request.form['phone_number']
+            phone_number = re.sub('\D', '', phone_number)
             password = request.form['password']
 
             out = open_weather_request(
