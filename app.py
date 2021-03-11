@@ -34,11 +34,6 @@ def index():
             schedule_email = request.form['email']
             schedule_password = request.form['password']
 
-            new_schedule = Todo(phone_number=schedule_phone_number,
-                                min_temp=schedule_min_temp,
-                                max_temp=schedule_max_temp,
-                                zipcode=schedule_zipcode,
-                                email=schedule_email)
             out = open_weather_request(
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
             text_response = send_text(out, schedule_phone_number)
