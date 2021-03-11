@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-
+<BR>
 <div class='instantTextForm'>
     <form action='/' method=post>
     <table class='instantTextForm'>
@@ -13,8 +13,8 @@
         <TR>
             <TD colspan=2>
                 Check the next five days for the weather conditions below<BR>
-                The results will be texted to your phone!<BR>
-                    APIs: Openweather & Twilio        
+                The results will be texted to your phone!<BR>                       
+                <BR>  
             </TD>
         </TR>
         <TR><TD>Min Temp</TD><TD><input type=text name=min_temp size=4></TD></TR>
@@ -26,5 +26,7 @@
         <TR><TD colspan=2><input type=submit name=submit value=submit></TD></TR>
     </table> 
     </form>   
+    <BR>
+    <i>APIs: Openweather & Twilio </i>  
 </div>
 {% endblock %}
