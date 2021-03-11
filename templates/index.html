@@ -10,12 +10,18 @@
     <form action='/' method=post>
     <table class='instantTextForm'>
         <TH colspan=2>Next Nice Day</TH>
-        <TR><TD colspan=2>Check the next five days for the weather conditions below:</TD> </TR>
+        <TR>
+            <TD colspan=2>
+                Check the next five days for the weather conditions below<BR>
+                The results will be texted to your phone!<BR>
+                    APIs: Openweather & Twilio        
+            </TD>
+        </TR>
         <TR><TD>Min Temp</TD><TD><input type=text name=min_temp size=4></TD></TR>
         <TR><TD>Max Temp</TD><TD><input type=text name=max_temp size=4></TD></TR>
         <TR><TD>Zipcode</TD><TD><input type=text name=zipcode size=6></TD></TR>
         <TR><TD>Phone Number</TD><TD><input type=text name=phone_number size=12></TD></TR>
-        <TR><TD>Email (optional)</TD><TD><input type=text name=email size=20></TD></TR>
+        <TR><TD>&nbsp;</TD></TR>
         <TR><TD>Password<BR>(Jeff's middle name)</TD><TD><input type=password name=password size=20></TD></TR>
         <TR><TD colspan=2><input type=submit name=submit value=submit></TD></TR>
     </table> 
