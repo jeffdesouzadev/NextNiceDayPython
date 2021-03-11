@@ -134,7 +134,6 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
             # print("the time: " + str(the_time))
             # print("temp:" + str(temp))
     # print(days)
-    # print(weather_times)
 
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
     for k in range(len(days)):
