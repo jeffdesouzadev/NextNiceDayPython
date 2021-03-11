@@ -1,5 +1,5 @@
 from flask import Flask, render_template, url_for, request, redirect
-from flask_sqlalchemy import SQLAlchemy
+#from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
 import requests
@@ -10,21 +10,12 @@ import os
 from boto.s3.connection import S3Connection
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schedules.db'
-db = SQLAlchemy(app)
+#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///schedules.db'
+#db = SQLAlchemy(app)
 
 
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(30))
-    phone_number = db.Column(db.String(20), nullable=False)
-    min_temp = db.Column(db.Integer)
-    max_temp = db.Column(db.Integer)
-    zipcode = db.Column(db.Integer)
-    date_created = db.Column(db.DateTime, default=datetime.utcnow)
-
-    def __repr__(self):
-        return '<Schedule %r>' % self.id
+#    def __repr__(self):
+#        return '<Schedule %r>' % self.id
 
 
 def KToF(kelvin):
@@ -37,15 +28,12 @@ def index():
         password = request.form['password']
         if str(password).upper() == "FRANCISCO":
             schedule_min_temp = request.form['min_temp']
-            # print("min temp is " + schedule_min_temp)
             schedule_max_temp = request.form['max_temp']
             schedule_zipcode = request.form['zipcode']
             schedule_phone_number = request.form['phone_number']
             schedule_email = request.form['email']
             schedule_password = request.form['password']
-            #new_schedule = Todo(min_temp=schedule_min_temp)
-            # new_schedule = Todo(min_temp=schedule_min_temp, max_temp=schedule_max_temp, zipcode=schedule_zipcode,
-            #                    phone_number=schedule_phone_number, email=schedule_email, date_created=datetime.utcnow)
+
             new_schedule = Todo(phone_number=schedule_phone_number,
                                 min_temp=schedule_min_temp,
                                 max_temp=schedule_max_temp,
@@ -55,40 +43,15 @@ def index():
                 schedule_min_temp, schedule_max_temp, schedule_zipcode)
             text_response = send_text(out, schedule_phone_number)
 
-            print(out)
-            try:
-                db.session.add(new_schedule)
-                db.session.commit()
-
-                # print(out)
-                return redirect('/')
-                # return render_template('index.html', out=out)
-            except:
-                return "There was an issue adding your schedule."
         else:
             return "Wrong password."
     else:
-        schedules = Todo.query.order_by(Todo.date_created).all()
-        return render_template('index.html', schedules=schedules)
-
-
-@app.route('/delete/<int:id>')
-def delete(id):
-    schedule_to_delete = Todo.query.get_or_404(id)
-    try:
-        db.session.delete(schedule_to_delete)
-        db.session.commit()
-        return redirect('/')
-    except:
-        return "There was a problem deleting that task"
+        #schedules = Todo.query.order_by(Todo.date_created).all()
+        return render_template('index.html')
 
 
 def open_weather_request(min_temp: int, max_temp: int, zipcode):
     print("index loaded")
-    # OPENWEATHER_AUTH = ''  # REMOVE BEFORE COMMITTING!!
-
-    # OPENWEATHER_AUTH = S3Connection(
-    #    os.environ['S3_KEY'], os.environ['OPENWEATHER_AUTH'])
 
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
 
@@ -102,8 +65,6 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     response = requests.request("GET", url, headers=headers, data=payload)
     data = json.loads(response.text)
     THREEHOURS = 60*60*3
-    #min_temp = 70
-    #max_temp = 80
 
     print("COD:"+data['cod'])
     print("Count:"+(str(data['cnt'])))
@@ -113,7 +74,7 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     epoch_time = datetime.now()
     day = epoch_time.strftime("%a %m/%d")
     weather_times = {}
-    # weather_times.setdefault(day, [])
+
     for three_hour_inc in range(count):
         epoch_time = data["list"][three_hour_inc]['dt']
         epoch_time = datetime.fromtimestamp(epoch_time)
@@ -129,12 +90,6 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
             if the_date not in weather_times:
                 weather_times.update({the_date: []})
             weather_times[the_date].append(the_time)
-            # days[the_date].append(the_time)
-
-            # print("the time: " + str(the_time))
-            # print("temp:" + str(temp))
-    # print(days)
-    # print(weather_times)
 
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
     for k in range(len(days)):
