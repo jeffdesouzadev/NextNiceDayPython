@@ -29,10 +29,10 @@ def index():
             phone_number = re.sub('\D', '', phone_number)
             password = request.form['password']
 
-            data = request_openweather_five_day()
-            text_response = filter_for_nice_days(
+            data = request_openweather_five_day(zipcode)
+            text_message = filter_for_nice_days(
                 min_temp, max_temp, zipcode, data)
-            text_response = send_text(text_response, phone_number)
+            texting_response = send_text(text_message, phone_number)
 
             return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
         else:
@@ -41,7 +41,7 @@ def index():
         return render_template('index.html')
 
 
-def request_openweather_five_day():
+def request_openweather_five_day(zipcode):
     print("index loaded")
 
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
