@@ -21,24 +21,28 @@ def KToF(kelvin):
 def index():
     if request.method == 'POST':
         password = request.form['password']
-        if str(password).upper() == "FRANCISCO":
-            min_temp = request.form['min_temp']
-            max_temp = request.form['max_temp']
-            zipcode = request.form['zipcode']
-            phone_number = request.form['phone_number']
-            phone_number = re.sub('\D', '', phone_number)
-            password = request.form['password']
-
-            data = request_openweather_five_day(zipcode)
-            text_message = filter_for_nice_days(
-                min_temp, max_temp, zipcode, data)
-            texting_response = send_text(text_message, phone_number)
+        if str(password).upper() == "HEARTHSTONE":
+            text_weather_results()
 
             return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
         else:
             return "Wrong password."
     else:
         return render_template('index.html')
+
+
+def text_weather_results():
+    min_temp = request.form['min_temp']
+    max_temp = request.form['max_temp']
+    zipcode = request.form['zipcode']
+    phone_number = request.form['phone_number']
+    phone_number = re.sub('\D', '', phone_number)
+    password = request.form['password']
+
+    data = request_openweather_five_day(zipcode)
+    text_message = filter_for_nice_days(
+        min_temp, max_temp, zipcode, data)
+    texting_response = send_text(text_message, phone_number)
 
 
 def request_openweather_five_day(zipcode):
@@ -125,7 +129,7 @@ def send_text(message: str, destination_number: str):
     }
     try:
         response = requests.request("POST", url, headers=headers, data=payload)
-        print(response.text)
+        # print(response.text)
     except Exception as ex:
         print("something went wrong with twilio? "+str(ex))
 
