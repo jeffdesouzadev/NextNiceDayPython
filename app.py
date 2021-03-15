@@ -55,8 +55,6 @@ def request_openweather_five_day(zipcode):
 
 
 def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
-    # print("COD:"+data['cod'])
-    # print("Count:"+(str(data['cnt'])))
     count = data['cnt']
 
     days = []
@@ -75,6 +73,8 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
         temp = data["list"][three_hour_inc]["main"]["temp"]
         temp = round(KToF(temp), 2)
 
+        # days[Fri 03/19, Sat 03/20, Sun 03/21]
+        # weather_times{Fri 03/19:[2AM, 5AM, 8AM], Sat 03/20:[2AM], Sun 03/21:[8PM]}
         if float(temp) <= float(max_temp) and float(temp) >= float(min_temp):
             if the_date not in days:
                 days.append(the_date)
@@ -82,6 +82,7 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
                 weather_times.update({the_date: []})
             weather_times[the_date].append(the_time)
 
+    # traversing the days and weather_times and outputting into a text-able string
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
     if len(days) < 1:
         out += "<None found!>"
@@ -114,14 +115,9 @@ def show_all_results(min_temp: int, max_temp: int, zipcode, data):
         the_datetime = the_date+" ("+the_time+")"
         temp = data["list"][three_hour_inc]["main"]["temp"]
         temp = round(KToF(temp), 2)
-
-        # if float(temp) <= float(max_temp) and float(temp) >= float(min_temp):
-        #   the_temp = "<b>"+str(temp)+"</b>"
-        # else:
-        #   the_temp = "<i>"+str(temp)+"</i>"
         the_temp = temp
-        time_temps[the_datetime] = the_temp
 
+        time_temps[the_datetime] = the_temp
     return time_temps
 
 
@@ -145,7 +141,7 @@ def send_text(message: str, destination_number: str):
     }
     try:
         response = requests.request("POST", url, headers=headers, data=payload)
-        # print(response.text)
+
     except Exception as ex:
         print("something went wrong with twilio? "+str(ex))
 
