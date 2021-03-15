@@ -56,8 +56,6 @@ def request_openweather_five_day(zipcode):
 
 def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
     count = data['cnt']
-
-    days = []
     epoch_time = datetime.now()
     day = epoch_time.strftime("%a %m/%d")
     weather_times = {}
@@ -73,11 +71,8 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
         temp = data["list"][three_hour_inc]["main"]["temp"]
         temp = round(KToF(temp), 2)
 
-        # days[Fri 03/19, Sat 03/20, Sun 03/21] <- I bet I can remove this.
         # weather_times{Fri 03/19:[2AM, 5AM, 8AM], Sat 03/20:[2AM], Sun 03/21:[8PM]}
         if float(temp) <= float(max_temp) and float(temp) >= float(min_temp):
-            if the_date not in days:
-                days.append(the_date)
             if the_date not in weather_times:
                 weather_times.update({the_date: []})
             weather_times[the_date].append(the_time)
