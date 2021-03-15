@@ -39,8 +39,6 @@ def index():
 
 
 def request_openweather_five_day(zipcode):
-    print("index loaded")
-
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
 
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
@@ -49,7 +47,10 @@ def request_openweather_five_day(zipcode):
     headers = {
         'appid': ''+OPENWEATHER_AUTH
     }
-    response = requests.request("GET", url, headers=headers, data=payload)
+    try:
+        response = requests.request("GET", url, headers=headers, data=payload)
+    except Exception as ex:
+        print("Something went wrong with OpenWeather! "+str(ex))
     data = json.loads(response.text)
     return data
 
@@ -77,24 +78,22 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
                 weather_times.update({the_date: []})
             weather_times[the_date].append(the_time)
 
-    # traversing the days and weather_times and outputting into a text-able string
+    # traversing weather_times and outputting into a text-able string
     out = "Days with temps["+str(min_temp)+"F-"+str(max_temp)+"F]%0a"
-    if len(days) < 1:
+    if len(weather_times) < 1:
         out += "<None found!>"
     else:
         k = 0
         for day in weather_times:
-            # for k in range(len(days)):
             if k > 0:
                 out += "]%0a"
-            #day = days[k]
             out += day + "%0a["
             if len(weather_times[day]) > 0:
                 for i in range(len(weather_times[day])):
                     out += weather_times[day][i]
                     if i < len(weather_times[day])-1:
                         out += "/"
-            if k == len(days)-1:
+            if k == len(weather_times)-1:
                 out += "]"
             k = k+1
     return out
@@ -120,7 +119,6 @@ def show_all_results(min_temp: int, max_temp: int, zipcode, data):
 
 
 def send_text(message: str, destination_number: str):
-
     TWILIO_AUTH = os.environ.get('TWILIO_AUTH')
     TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
     TWILIO_SID = os.environ.get('TWILIO_SID')
@@ -139,10 +137,8 @@ def send_text(message: str, destination_number: str):
     }
     try:
         response = requests.request("POST", url, headers=headers, data=payload)
-
     except Exception as ex:
-        print("something went wrong with twilio? "+str(ex))
-
+        print("Something went wrong with Twilio! "+str(ex))
     return response.text
 
 
