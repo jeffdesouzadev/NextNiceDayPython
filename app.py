@@ -41,12 +41,9 @@ def request_openweather_five_day(zipcode):
     print("index loaded")
 
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
-    if(OPENWEATHER_AUTH is None):
-        print("OPENWEATHER auth missing")
 
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
         zipcode+"&appid="+OPENWEATHER_AUTH
-
     payload = {}
     headers = {
         'appid': ''+OPENWEATHER_AUTH
@@ -68,6 +65,8 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
 
     for three_hour_inc in range(count):
         epoch_time = data["list"][three_hour_inc]['dt']
+        utc_offset = data["city"]["timezone"]
+        epoch_time += utc_offset
         epoch_time = datetime.fromtimestamp(epoch_time)
         the_date = epoch_time.strftime("%a %m/%d")
         the_time = epoch_time.strftime("%-I%p")
