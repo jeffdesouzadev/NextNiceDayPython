@@ -29,9 +29,10 @@ def index():
             phone_number = re.sub('\D', '', phone_number)
             password = request.form['password']
 
-            out = open_weather_request(
-                min_temp, max_temp, zipcode)
-            text_response = send_text(out, phone_number)
+            data = request_openweather_five_day()
+            text_response = filter_for_nice_days(
+                min_temp, max_temp, zipcode, data)
+            text_response = send_text(text_response, phone_number)
 
             return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
         else:
@@ -40,14 +41,12 @@ def index():
         return render_template('index.html')
 
 
-def open_weather_request(min_temp: int, max_temp: int, zipcode):
+def request_openweather_five_day():
     print("index loaded")
 
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
     if(OPENWEATHER_AUTH is None):
         print("OPENWEATHER auth missing")
-
-    # print(os.environ)
 
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
         zipcode+"&appid="+OPENWEATHER_AUTH
@@ -58,7 +57,10 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     }
     response = requests.request("GET", url, headers=headers, data=payload)
     data = json.loads(response.text)
+    return data
 
+
+def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
     print("COD:"+data['cod'])
     print("Count:"+(str(data['cnt'])))
     count = data['cnt']
