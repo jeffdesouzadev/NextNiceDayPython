@@ -44,6 +44,10 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     print("index loaded")
 
     OPENWEATHER_AUTH = os.environ.get('OPENWEATHER_AUTH')
+    if(OPENWEATHER_AUTH is None):
+        print("OPENWEATHER auth missing")
+
+    # print(os.environ)
 
     url = "http://api.openweathermap.org/data/2.5/forecast?q=" + \
         zipcode+"&appid="+OPENWEATHER_AUTH
@@ -54,7 +58,6 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
     }
     response = requests.request("GET", url, headers=headers, data=payload)
     data = json.loads(response.text)
-    THREEHOURS = 60*60*3
 
     print("COD:"+data['cod'])
     print("Count:"+(str(data['cnt'])))
@@ -101,9 +104,15 @@ def open_weather_request(min_temp: int, max_temp: int, zipcode):
 
 
 def send_text(message: str, destination_number: str):
+
     TWILIO_AUTH = os.environ.get('TWILIO_AUTH')
     TWILIO_PHONE_NUMBER = os.environ.get('TWILIO_PHONE_NUMBER')
     TWILIO_SID = os.environ.get('TWILIO_SID')
+
+    if(TWILIO_AUTH is None or TWILIO_PHONE_NUMBER is None or TWILIO_SID is None):
+        print("Twilio auth missing")
+    else:
+        print("Twilio auth is there")
     url = "https://api.twilio.com/2010-04-01/Accounts/"+TWILIO_SID+"/Messages.json"
 
     payload = 'To=%2B1' + destination_number + '&Body=' + message + \
@@ -112,8 +121,11 @@ def send_text(message: str, destination_number: str):
         'Authorization': 'Basic '+TWILIO_AUTH,
         'Content-Type': 'application/x-www-form-urlencoded'
     }
-
-    response = requests.request("POST", url, headers=headers, data=payload)
+    try:
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+    except Exception as ex:
+        print("something went wrong with twilio? "+str(ex))
 
     return response.text
 
