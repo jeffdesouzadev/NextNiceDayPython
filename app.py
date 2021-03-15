@@ -73,7 +73,7 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
         temp = data["list"][three_hour_inc]["main"]["temp"]
         temp = round(KToF(temp), 2)
 
-        # days[Fri 03/19, Sat 03/20, Sun 03/21]
+        # days[Fri 03/19, Sat 03/20, Sun 03/21] <- I bet I can remove this.
         # weather_times{Fri 03/19:[2AM, 5AM, 8AM], Sat 03/20:[2AM], Sun 03/21:[8PM]}
         if float(temp) <= float(max_temp) and float(temp) >= float(min_temp):
             if the_date not in days:
@@ -87,18 +87,21 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
     if len(days) < 1:
         out += "<None found!>"
     else:
-        for k in range(len(days)):
+        k = 0
+        for day in weather_times:
+            # for k in range(len(days)):
             if k > 0:
                 out += "]%0a"
-            day = days[k]
+            #day = days[k]
             out += day + "%0a["
             if len(weather_times[day]) > 0:
                 for i in range(len(weather_times[day])):
                     out += weather_times[day][i]
                     if i < len(weather_times[day])-1:
-                        out += ","
+                        out += "/"
             if k == len(days)-1:
                 out += "]"
+            k = k+1
     return out
 
 
