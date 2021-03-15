@@ -1,12 +1,9 @@
 from flask import Flask, render_template, url_for, request, redirect
 from datetime import datetime
-
 import requests
 import re
 import json
 import time
-
-
 import os
 from boto.s3.connection import S3Connection
 
@@ -22,27 +19,22 @@ def index():
     if request.method == 'POST':
         password = request.form['password']
         if str(password).upper() == "HEARTHSTONE":
-            text_weather_results()
+            min_temp = request.form['min_temp']
+            max_temp = request.form['max_temp']
+            zipcode = request.form['zipcode']
+            phone_number = request.form['phone_number']
+            phone_number = re.sub('\D', '', phone_number)  # remove non-digits
+            password = request.form['password']
 
+            data = request_openweather_five_day(zipcode)
+            text_message = filter_for_nice_days(
+                min_temp, max_temp, zipcode, data)
+            texting_response = send_text(text_message, phone_number)
             return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
         else:
             return "Wrong password."
     else:
         return render_template('index.html')
-
-
-def text_weather_results():
-    min_temp = request.form['min_temp']
-    max_temp = request.form['max_temp']
-    zipcode = request.form['zipcode']
-    phone_number = request.form['phone_number']
-    phone_number = re.sub('\D', '', phone_number)
-    password = request.form['password']
-
-    data = request_openweather_five_day(zipcode)
-    text_message = filter_for_nice_days(
-        min_temp, max_temp, zipcode, data)
-    texting_response = send_text(text_message, phone_number)
 
 
 def request_openweather_five_day(zipcode):
