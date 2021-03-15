@@ -6,8 +6,7 @@
 
 {% block body %}
 <BR>
-<div class='instantTextForm'>
-    <form action='/' method=post>
+<div class='instantTextForm'>    
     <table class='instantTextForm'>
         <TH colspan=2>Next Nice Day - Submitted!</TH>
         <TR>
@@ -22,10 +21,26 @@
         <TR><TD>Max Temp</TD><TD>{{ max_temp }}</TD></TR>
         <TR><TD>Zipcode</TD><TD>{{ zipcode }}</TD></TR>
         <TR><TD>Phone Number</TD><TD>{{ phone_number }}</TD></TR>
-        <TR><TD>&nbsp;</TD></TR>
-        
+        <TR><TD>&nbsp;</TD></TR>     
     </table> 
-    </form>   
+    <BR>
+    <table class='instantTextForm'>
+        <TR>
+            <TD>Date-Time</TD>
+            <TD>Temperature</TD>
+        </TR>
+        {% for time_temp in time_temps %}
+        <TR>
+            {% if time_temps[time_temp]|float >=min_temp|float and time_temps[time_temp]|float <=max_temp|float %}
+                <TD><b>{{time_temp}}</b></TD>
+                <TD><b>{{time_temps[time_temp]}}</b></TD>
+            {% else %}
+                <TD><i>{{time_temp}}</i></TD>
+                <TD><i>{{time_temps[time_temp]}}</i></TD>
+                {% endif %}
+        </TR>
+        {% endfor %}
+    </table>
     <BR>
     <i>APIs: Openweather & Twilio </i>  
 </div>

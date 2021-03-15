@@ -29,8 +29,9 @@ def index():
             data = request_openweather_five_day(zipcode)
             text_message = filter_for_nice_days(
                 min_temp, max_temp, zipcode, data)
+            time_temps = show_all_results(min_temp, max_temp, zipcode, data)
             texting_response = send_text(text_message, phone_number)
-            return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number)
+            return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number, time_temps=time_temps)
         else:
             return "Wrong password."
     else:
@@ -54,8 +55,8 @@ def request_openweather_five_day(zipcode):
 
 
 def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
-    print("COD:"+data['cod'])
-    print("Count:"+(str(data['cnt'])))
+    # print("COD:"+data['cod'])
+    # print("Count:"+(str(data['cnt'])))
     count = data['cnt']
 
     days = []
@@ -98,6 +99,30 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
             if k == len(days)-1:
                 out += "]"
     return out
+
+
+def show_all_results(min_temp: int, max_temp: int, zipcode, data):
+    time_temps = {}
+    count = data['cnt']
+    for three_hour_inc in range(count):
+        epoch_time = data["list"][three_hour_inc]['dt']
+        utc_offset = data["city"]["timezone"]
+        epoch_time += utc_offset
+        epoch_time = datetime.fromtimestamp(epoch_time)
+        the_date = epoch_time.strftime("%a %m/%d")
+        the_time = epoch_time.strftime("%-I%p")
+        the_datetime = the_date+" ("+the_time+")"
+        temp = data["list"][three_hour_inc]["main"]["temp"]
+        temp = round(KToF(temp), 2)
+
+        # if float(temp) <= float(max_temp) and float(temp) >= float(min_temp):
+        #   the_temp = "<b>"+str(temp)+"</b>"
+        # else:
+        #   the_temp = "<i>"+str(temp)+"</i>"
+        the_temp = temp
+        time_temps[the_datetime] = the_temp
+
+    return time_temps
 
 
 def send_text(message: str, destination_number: str):
