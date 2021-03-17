@@ -116,7 +116,7 @@ def show_all_results(data):
         temp = round(KToF(temp), 2)
         the_temp = temp
 
-        # time_temps{1515850000:79.4, 1515886000:86.2, epoch:tempF}
+        # time_temps{Wed 3/17 (6PM):84.38, Wed 03/17 (9PM):68.27, DOW Date (Time):tempF}
         time_temps[the_datetime] = the_temp
     return time_temps
 
