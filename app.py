@@ -29,7 +29,7 @@ def index():
             data = request_openweather_five_day(zipcode)
             text_message = filter_for_nice_days(
                 min_temp, max_temp, zipcode, data)
-            time_temps = show_all_results(min_temp, max_temp, zipcode, data)
+            time_temps = show_all_results(data)
             texting_response = send_text(text_message, phone_number)
             return render_template('submitted.html', min_temp=min_temp, max_temp=max_temp, zipcode=zipcode, phone_number=phone_number, time_temps=time_temps)
         else:
@@ -47,8 +47,10 @@ def request_openweather_five_day(zipcode):
     headers = {
         'appid': ''+OPENWEATHER_AUTH
     }
+
     try:
         response = requests.request("GET", url, headers=headers, data=payload)
+
     except Exception as ex:
         print("Something went wrong with OpenWeather! "+str(ex))
     data = json.loads(response.text)
@@ -99,7 +101,7 @@ def filter_for_nice_days(min_temp: int, max_temp: int, zipcode, data):
     return out
 
 
-def show_all_results(min_temp: int, max_temp: int, zipcode, data):
+def show_all_results(data):
     time_temps = {}
     count = data['cnt']
     for three_hour_inc in range(count):
